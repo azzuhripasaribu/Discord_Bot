@@ -42,4 +42,7 @@ async def on_command_error(ctx, error):
 repl_link = 'https://DiscordBot.fadilhisyam.repl.co'
 keep_alive.awake(repl_link, True)
 my_secret = os.environ['TOKEN']
-client.run(my_secret)
+try:
+  client.run(my_secret)
+except:
+  os.system("kill 1")
