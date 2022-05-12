@@ -35,11 +35,12 @@ def format_selector(ctx):
     'protocol': f'{best_video["protocol"]}+{best_audio["protocol"]}'
   }
 
-def play_next(self, ctx, voice_client, source):
+def play_next(self, ctx, voice_client, source, playlist):
     if len(source) > 1:
       voice_client.stop()
       del self._queue[0]
-      voice_client.play(self._queue[0], after = lambda e: play_next(self, ctx, voice_client, source))
+      del self._queue2[0]
+      voice_client.play(self._queue[0], after = lambda e: play_next(self, ctx, voice_client, source, playlist))
     else:
       print("Done")
 
@@ -48,8 +49,10 @@ class music(commands.Cog):
   def __init__(self, client, bot=None):
     self.client = client
     self._queue = []
+    self._queue2 = []
 
   @commands.command()
+  # Command Play
   async def p(self,ctx, *, inp):
     # Check if author is in a Voice Channel
     if ctx.author.voice is None:
@@ -70,10 +73,8 @@ class music(commands.Cog):
       # Searches youtube for input
       video_search = _search(inp, limit=1)
       search_result = video_search.result()
-
       # URL
       url2 = search_result['result'][0]['link']
-
       # Embed
       judul = search_result['result'][0]['title']
       thumbnail = search_result['result'][0]['thumbnails'][0]['url']
@@ -102,9 +103,9 @@ class music(commands.Cog):
         #     urls = fmt['url']
         source = await discord.FFmpegOpusAudio.from_probe(urls ,**FFMPEG_OPTIONS)
         self._queue.append(source)
-                  
+        self._queue2.append(search_result)                  
         if not voice_client.is_playing():
-          voice_client.play(self._queue[0], after = lambda e: play_next(self, ctx, voice_client, self._queue))
+          voice_client.play(self._queue[0], after = lambda e: play_next(self, ctx, voice_client, self._queue, self._queue2))
           voice_client.is_playing()
         else:
           await ctx.send("**Ditambahkan ke dalam queue!** 📝")
@@ -147,7 +148,21 @@ class music(commands.Cog):
   #   else:
   #     self.loop_is = False
   #     await ctx.send("**Loop is now disabled!**")
+
+
+  @commands.command()
+  async def playlist(self, ctx):
+    embed=discord.Embed(title="Current Playlist", description="Playlist yang sedang dimainkan.", color=0xebd234)
     
+    # iterates through playlist
+    for position, entry in enumerate(self._queue2, 1):
+      title = entry['result'][0]['title']
+      link = entry['result'][0]['link']
+      #pl_entry = str(position + '. ' +  title + ' ' + link)
+      embed.add_field(name=f"Position - {position}", value=f"[{title}](link)", inline=False)
+      
+    await ctx.send(embed=embed)
+  
   @commands.command()
   async def leave(self,ctx):
     try:
