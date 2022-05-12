@@ -126,6 +126,7 @@ class music(commands.Cog):
   @commands.command()
   async def stop(self,ctx):
     self._queue = []
+    self._queue2 = []
     ctx.voice_client.stop()
     await ctx.send("**Menghentikan lagu** ⏹️")
 
@@ -162,11 +163,14 @@ class music(commands.Cog):
       embed.add_field(name=f"Position - {position}", value=f"[{title}]({link})", inline=False)
       
     await ctx.send(embed=embed)  
+    
   
   
   @commands.command()
   async def leave(self,ctx):
     try:
+      self._queue = []
+      self._queue2 = []
       ctx.voice_client.stop()
       await ctx.voice_client.disconnect()
       await ctx.send("**Dadah** 👋🏻")
