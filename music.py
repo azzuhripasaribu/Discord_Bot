@@ -152,7 +152,7 @@ class music(commands.Cog):
 
   @commands.command()
   async def playlist(self, ctx):
-    embed=discord.Embed(title="Current Playlist", description="Playlist yang sedang dimainkan.", color=0xebd234)
+    embed=discord.Embed(title="Current Playlist 📝", description="Playlist yang sedang dimainkan.", color=0xebd234)
     
     # iterates through playlist
     for position, entry in enumerate(self._queue2, 1):
