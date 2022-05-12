@@ -159,10 +159,10 @@ class music(commands.Cog):
       title = entry['result'][0]['title']
       link = entry['result'][0]['link']
       #pl_entry = str(position + '. ' +  title + ' ' + link)
-      embed.add_field(name=f"Position - {position}", value=f"[{title}]({link}))", inline=False)
+      embed.add_field(name=f"Position - {position}", value=f"[{title}]({link})", inline=False)
       
-    await ctx.send(embed=embed
-    )  
+    await ctx.send(embed=embed)  
+  
   
   @commands.command()
   async def leave(self,ctx):
