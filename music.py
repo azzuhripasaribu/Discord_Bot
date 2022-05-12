@@ -152,16 +152,17 @@ class music(commands.Cog):
 
   @commands.command()
   async def playlist(self, ctx):
-    embed=discord.Embed(title="Current Playlist", description="Playlist yang sedang dimainkan.", color=0xebd234)
+    embed=discord.Embed(title="Current Playlist 📝", description="Playlist yang sedang dimainkan.", color=0xebd234)
     
     # iterates through playlist
     for position, entry in enumerate(self._queue2, 1):
       title = entry['result'][0]['title']
       link = entry['result'][0]['link']
       #pl_entry = str(position + '. ' +  title + ' ' + link)
-      embed.add_field(name=f"Position - {position}", value=f"[{title}](link)", inline=False)
+      embed.add_field(name=f"Position - {position}", value=f"[{title}]({link}))", inline=False)
       
-    await ctx.send(embed=embed)
+    await ctx.send(embed=embed
+    )  
   
   @commands.command()
   async def leave(self,ctx):
