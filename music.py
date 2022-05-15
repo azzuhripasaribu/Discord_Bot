@@ -210,6 +210,7 @@ class music(commands.Cog):
     embed.add_field(name='Wish Simulator', value="```>wish [Character]```", inline=False)
     embed.add_field(name='Wish Inventory', value="```>wish inventory```", inline=False)
     embed.add_field(name='Genshin Wiki', value="```>g [Weapon Name]```", inline=False)  
+    embed.add_field(name='Search Anime', value="```>search [name]```", inline=False)  
     await ctx.send(embed=embed)
 
   @commands.Cog.listener()

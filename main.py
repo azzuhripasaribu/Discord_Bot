@@ -1,11 +1,11 @@
 import os
 import discord
 from discord.ext import commands, tasks
-import music, genshin_fun, genshin_stats
+import anime, music, genshin_fun, genshin_stats
 import keep_alive
 from itertools import cycle
 
-cogs = [music, genshin_fun, genshin_stats]
+cogs = [anime, music, genshin_fun, genshin_stats]
 client = commands.Bot(
   command_prefix='>',
   intents=discord.Intents.all(),
@@ -13,6 +13,7 @@ client = commands.Bot(
 )
 stat = cycle([
   'Python',
+  'Anime List',
   'Music Player',
   'Wish Simulator',
   'Wish Inventory',

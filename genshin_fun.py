@@ -22,24 +22,35 @@ class genshin_fun(commands.Cog):
   def __init__(self, client):
     self.client = client
 
+  #Gets genshin page
   @commands.command()
   async def g(self, ctx, *, inp):
     img = "https://cdn.discordapp.com/attachments/902414074720178216/905114368574894100/footer.png"
     start_time = time.time()
     search = inp.replace(" ", "+")
+    
     try:
+      # embeds waiting message
       embed = discord.Embed(title=f"Searching \"{inp}\", please wait!", color=0xebd234)
       embed.set_author(name="Genshin Wiki")
       embed.set_image(url=img)
       message = await ctx.send(embed=embed)
+
+      # creates session
       html = f"https://genshin-impact.fandom.com/wiki/Special:Search?query={search}"
       session = HTMLSession()
       response = session.get(html, headers={"User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 12871.102.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36"})
+      
+      #parse HTML
       html_text = bs(response.content, "lxml")
       data = html_text.find('h1', class_="unified-search__result__header")
       url = data.find('a').get("href")
       #print("--- %s seconds ---" % (time.time() - start_time))
+
+      # Creates second session
       response = session.get(url, headers={"User-Agent": "Mozilla/5.0 (X11; CrOS x86_64 12871.102.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.141 Safari/537.36"})
+
+      # Parse HTML and build discord response
       html_text = bs(response.content, "lxml")
       title = html_text.find('h2', class_="pi-item pi-item-spacing pi-title pi-secondary-background").text
       desc = html_text.find('div', class_="standard-border").find('i').text
@@ -55,12 +66,14 @@ class genshin_fun(commands.Cog):
         try:
           stats_arr.append(stats[x].text)
         except:
-          stats_arr.appand("None")
+          stats_arr.append("None")
       title_passive = html_text.find('th', class_="pi-horizontal-group-item pi-data-label pi-secondary-font pi-border-color pi-item-spacing").text
       passive = html_text.find('td', class_="pi-horizontal-group-item pi-data-value pi-font pi-border-color pi-item-spacing").text
       if len(passive) > 200:
         passive = passive[0:200] + "..."
       #print("--- %s seconds ---" % (time.time() - start_time))
+
+      # Build response embed
       embed1 = discord.Embed(title=title, url=url, description=desc , color=0xebd234)
       embed1.set_author(name="Genshin Wiki")
       embed1.set_thumbnail(url=thumb)
@@ -72,7 +85,10 @@ class genshin_fun(commands.Cog):
       embed1.add_field(name="2nd Stat Type", value=stats_arr[1], inline=True)
       embed1.add_field(name="2nd Stat\n(Lv. 1 - 90)", value=stats_arr[2], inline=True)
       embed1.add_field(name=title_passive, value=passive, inline=False)
+      
+      #sends response      
       await message.edit(embed=embed1)
+    
     except Exception as err:
       print(err)
       await ctx.send("**Item does not exists! Try again.**")  
